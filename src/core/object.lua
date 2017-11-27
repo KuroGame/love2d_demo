@@ -1,44 +1,61 @@
---
--- object.lua
---
+-- include
+local Class = require("src/core/class")
+local Apperance = require("src/core/apperance")
+local StateMachine = require("src/core/state_machine")
+-- Object
+local Object = Class:extend()
 
-local Object = {}
-Object.__index = Object
-
-function Object:ctor(...)
-    error("'ctor(...)' is not implemented.")
+function Object:ctor(name, x, y, width, height)
+    self.name = name
+    self.pos = {x=x, y=y}
+    self.size = {w=width, h=height}
+    self.apperances = {}
+    self.stateMachine = StateMachine()
 end
 
-function Object:__call(...)
-    local obj = setmetatable({}, self)
-    obj:ctor(...)
-    return obj
+function Object:addApperance(name, path, duration)
+    self.apperances[name] = Apperance(path, self.pos)
 end
 
-function Object:extend()
-    local cls = {}
-    -- the __functions
-    for k, v in pairs(self) do
-        if k:find("__") == 1 then
-            cls[k] = v
-        end
+function Object:getApperance(name)
+    return self.apperances[name]
+end
+
+-- Naive move with outh collision detection, should be called carefully
+-- Usually called after collision detection in Scene
+function Object:move(deltaX, deltaY)
+    self.pos.x = self.pos.x + deltaX
+    self.pos.y = self.pos.y + deltaY
+end
+
+function Object:setPosition(x, y)
+    self.pos.x = x
+    self.pos.y = y
+end
+
+function Object:addState(name, apperance)
+    if type(apperance) == "string" then
+        apperance = self.apperances[apperance]
     end
-    cls.__index = cls
-    -- give super methods
-    cls.super = self
-    return setmetatable(cls, self)
-end
-
-function Object:is(T)
-    local mt = getmetatable(self)
-    while mt do
-        if mt == T then
-            return true
-        end
-        mt = getmetatable(mt)
+    if apperance:is(Apperance) then
+        self.stateMachine:addState(name, apperance)
     end
-    return false
 end
 
+function Object:addStateEdge(src, tar, cond)
+    self.stateMachine:addEdge(src, tar, cond)
+end
+
+function Object:currentState()
+    if self.stateMachine.curState then return self.stateMachine.curState.name end
+end
+
+function Object:update(dt)
+    self.stateMachine:update(dt)
+end
+
+function Object:draw()
+    self.stateMachine:draw()
+end
 
 return Object
