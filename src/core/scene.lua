@@ -1,5 +1,5 @@
-local Object = require("src/core/object")
-local Scene = Object:extend()
+local Class = require("src/core/class")
+local Scene = Class:extend()
 
 function Scene:ctor(distanceFunc)
     -- the objects contains all things in the scene
@@ -13,7 +13,7 @@ function Scene:ctor(distanceFunc)
     end
 end
 
-function Scene:addObject(name, obj, objType)
+function Scene:addClass(name, obj, objType)
     self.objects[name] = {
         name=name,
         object=obj,

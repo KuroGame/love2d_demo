@@ -1,14 +1,18 @@
-local Object = require("src/core/object")
-local Apperance = Object:extend()
+local Class = require("src/core/class")
+local Apperance = Class:extend()
 
-function Apperance:ctor(imgPrefix, duration)
+function Apperance:ctor(imgPrefix, pos, size, duration)
     self.animation = newAnimation(imgPrefix, duration)
+    self.pos = pos
+    self.size = size
 end
 
 function Apperance:draw()
     local spriteNum = math.floor(self.animation.currentTime / self.animation.duration * #self.animation.frames) + 1
     -- X, Y, direction, scale
-    love.graphics.draw(self.animation.frames[spriteNum], 0, 0)
+    local img = self.animation.frames[spriteNum]
+    self:calcBBox(img)
+    love.graphics.draw(img, self.pos.x, self.pos.y)
 end
 
 function Apperance:update(dt)
@@ -20,6 +24,11 @@ end
 
 function Apperance:reset()
     self.animation.currentTime = 0
+end
+
+function Apperance:calcBBox(img)
+    -- self.size.w = img:getWidth()
+    -- self.size.h = img:getHeight()
 end
 
 function newAnimation(imagePrefix, duration)
@@ -40,7 +49,7 @@ function newAnimation(imagePrefix, duration)
  
     animation.duration = duration or 1
     animation.currentTime = 0
- 
+
     return animation
 end
 

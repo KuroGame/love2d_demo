@@ -1,5 +1,5 @@
-local Object = require("src/core/object")
-local StateMachine = Object:extend()
+local Class = require("src/core/class")
+local StateMachine = Class:extend()
 
 -- constructor
 function StateMachine:ctor()
