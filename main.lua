@@ -2,17 +2,22 @@
 
 -- global initialization
 function love.load()
-    Condition = require("src/utils/condition")
-    StateMachine = require("src/utils/state_machine")
-    Apperance = require("src/utils/apperance")
-
-    local anime_stand = Apperance("one.png", 16, 18, 1)
-    local anime_move = Apperance("oldHero.png", 16, 18, 1)
+    Apperance = require("src/core/apperance")
+    StateMachine = require("src/core/state_machine")
+    Condition = require("src/core/condition")
+    -- load images
+    marisa_stand = Apperance("asset/images/marisa/stand")
+    marisa_walkFront = Apperance("asset/images/marisa/walkFront")
+    marisa_walkBack = Apperance("asset/images/marisa/walkBack")
+    -- set states
     states = StateMachine()
-    states:addState("stand", anime_stand)
-    states:addState("move", anime_move)
-    states:addEdge("stand", "move", Condition:newKeyboardCondition("w", "down"))
-    states:addEdge("move", "stand", Condition:newKeyboardCondition("w", "up"))
+    states:addState("stand", marisa_stand)
+    states:addState("walkFront", marisa_walkFront)
+    states:addState("walkBack", marisa_walkBack)
+    states:addEdge("stand", "walkFront", Condition:newKeyboardCondition("d", "down"))
+    states:addEdge("walkFront", "stand", Condition:newKeyboardCondition("d", "up"))
+    states:addEdge("stand", "walkBack", Condition:newKeyboardCondition("a", "down"))
+    states:addEdge("walkBack", "stand", Condition:newKeyboardCondition("a", "up"))
 end
 
 function love.update(dt)
