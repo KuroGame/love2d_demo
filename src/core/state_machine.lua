@@ -1,4 +1,4 @@
-local Object = require("src/misc/object")
+local Object = require("src/core/object")
 local StateMachine = Object:extend()
 
 -- constructor
