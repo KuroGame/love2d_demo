@@ -13,13 +13,13 @@ function love.load()
     enemy = Object("enemy", 100, 0, 61, 109)
     world:add(marisa, marisa.pos.x, marisa.pos.y, marisa.size.w, marisa.size.h)
     world:add(enemy, enemy.pos.x, enemy.pos.y, enemy.size.w, enemy.size.h)
-    marisa:addApperance("stand", "asset/images/marisa/stand")
-    marisa:addApperance("walkFront", "asset/images/marisa/walkFront")
-    marisa:addApperance("walkBack", "asset/images/marisa/walkBack")
+    marisa:addApperance("stand", "asset/images/YuukiKonno/Yuk000")
+    marisa:addApperance("walkFront", "asset/images/YuukiKonno/Yuk400")
+    marisa:addApperance("walkBack", "asset/images/YuukiKonno/Yuk401")
     marisa:addState("stand", "stand")
     marisa:addState("walkFront", "walkFront")
     marisa:addState("walkBack", "walkBack")
-    enemy:addApperance("stand", "asset/images/marisa/stand")
+    enemy:addApperance("stand", "asset/images/YuukiKonno/Yuk000")
     enemy:addState("stand", "stand")
     -- set states
     marisa:addStateEdge("stand", "walkFront", Condition:newKeyboardCondition("d", "down"))
@@ -37,15 +37,15 @@ function love.update(dt)
     marisa:update(dt)
     enemy:update(dt)
     if marisa:currentState() == "walkFront" then
-        marisa:move(1.5, 0)
+        marisa:move(3, 0)
     elseif marisa:currentState() == "walkBack" then
-        marisa:move(-1, 0)
+        marisa:move(-3, 0)
     end
     if love.keyboard.isDown("s") then
-        marisa:move(0, 2)
+        marisa:move(0, 3)
     end
     if love.keyboard.isDown("w") then
-        marisa:move(0, -2)
+        marisa:move(0, -3)
     end
     local actualX, actualY, cols, len = world:move(marisa, marisa.pos.x, marisa.pos.y, playerFilter)
     marisa.pos.x = actualX
