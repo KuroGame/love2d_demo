@@ -10,11 +10,11 @@ function Object:ctor(name, x, y, width, height)
     self.pos = {x=x, y=y}
     self.size = {w=width, h=height}
     self.apperances = {}
-    self.stateMachine = StateMachine()
+    self.stateMachine = StateMachine(self)
 end
 
 function Object:addApperance(name, path, duration)
-    self.apperances[name] = Apperance(path, self.pos)
+    self.apperances[name] = Apperance(path, self.pos, duration)
 end
 
 function Object:getApperance(name)

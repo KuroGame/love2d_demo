@@ -2,11 +2,12 @@ local Class = require("src/core/class")
 local StateMachine = Class:extend()
 
 -- constructor
-function StateMachine:ctor()
+function StateMachine:ctor(obj)
     self.states = {}
     self.graph = {}
     self.curState = nil
     self.curGraph = nil
+    self.object = obj
 end
 
 function StateMachine:addState(name, apperance)
@@ -46,9 +47,8 @@ function StateMachine:update(dt)
     if self.curState ~= nil then
         self.curState.apperance:update(dt)
         self.curState.duration = self.curState.duration + dt
-        local dura = self.curState.duration
         for k, v in pairs(self.curGraph) do
-            if v.condition(dura) then
+            if v.condition(self.object, self.curState) then
                 self:enterState(v.target)
             end
         end

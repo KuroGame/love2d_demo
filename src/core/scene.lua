@@ -1,3 +1,4 @@
+local bump = require("src/lib/bump")
 local Class = require("src/core/class")
 local Scene = Class:extend()
 
@@ -7,19 +8,22 @@ function Scene:ctor(distanceFunc)
     self.objects = {}
     self.players = {}
     self.graph = {}
+    self.bumpWorld = bump.newWorld()
     -- default distance metric is L1 norm
     self.distanceFunc = distanceFunc or function(a, b)
         return math.abs(a.x - b.x) + math.abs(a.y - b.y)
     end
 end
 
-function Scene:addObject(name, obj, objType)
+function Scene:add(name, obj, objType)
+    objType = objType or "others"
     self.objects[name] = {
         name=name,
         object=obj,
         type=objType
     }
     self.graph[name] = {}
+    self.bumpWorld:add(obj, obj.pos.x, obj.pos.y, obj.size.w, obj.size.h)
     if objType == "player" then
         self.players[name] = self.objects[name]
     end
@@ -37,10 +41,12 @@ end
 function Scene:update(dt)
     for k, v in pairs(self.objects) do
         -- update time
-        v:update(dt)
+        v.object:update(dt)
         -- update 
         -- update collision
-
+        local rx, ry, _, _ = self.bumpWorld:move(v.object, v.object.pos.x, v.object.pos.y)
+        v.object.pos.x = rx
+        v.object.pos.y = ry
     end
 
     -- update distance
@@ -55,7 +61,7 @@ end
 
 function Scene:draw()
     for k, v in pairs(self.objects) do
-        v:draw()
+        v.object:draw()
     end
 end
 

@@ -1,10 +1,10 @@
 local Class = require("src/core/class")
 local Apperance = Class:extend()
 
-function Apperance:ctor(imgPrefix, pos, size, duration)
+function Apperance:ctor(imgPrefix, pos, duration)
     self.animation = newAnimation(imgPrefix, duration)
     self.pos = pos
-    self.size = size
+    self.over = false
 end
 
 function Apperance:draw()
@@ -15,6 +15,11 @@ function Apperance:draw()
 end
 
 function Apperance:update(dt)
+    local spriteNum = math.floor(self.animation.currentTime / self.animation.duration * #self.animation.frames) + 1
+    if spriteNum == #self.animation.frames then
+        self.over = true
+        return
+    end
     self.animation.currentTime = self.animation.currentTime + dt
     if self.animation.currentTime >= self.animation.duration then
         self.animation.currentTime = self.animation.currentTime - self.animation.duration
@@ -23,11 +28,7 @@ end
 
 function Apperance:reset()
     self.animation.currentTime = 0
-end
-
-function Apperance:calcBBox(img)
-    -- self.size.w = img:getWidth()
-    -- self.size.h = img:getHeight()
+    self.over = false
 end
 
 function newAnimation(imagePrefix, duration)
@@ -36,7 +37,7 @@ function newAnimation(imagePrefix, duration)
  
     local idx = 0
     repeat
-        local path = imagePrefix .. string.format("_%02d", idx) .. ".png"
+        local path = imagePrefix .. string.format("%02d", idx) .. ".png"
         if love.filesystem.exists(path) then
             local img = love.graphics.newImage(path)
             table.insert(animation.frames, img)
