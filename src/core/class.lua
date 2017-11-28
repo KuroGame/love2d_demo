@@ -4,20 +4,20 @@
 -- Simple method to implement OOP in lua
 --
 
-local Object = {}
-Object.__index = Object
+local Class = {}
+Class.__index = Class
 
-function Object:ctor(...)
+function Class:ctor(...)
     error("'ctor(...)' is not implemented.")
 end
 
-function Object:__call(...)
+function Class:__call(...)
     local obj = setmetatable({}, self)
     obj:ctor(...)
     return obj
 end
 
-function Object:extend()
+function Class:extend()
     local cls = {}
     -- the __functions
     for k, v in pairs(self) do
@@ -31,7 +31,7 @@ function Object:extend()
     return setmetatable(cls, self)
 end
 
-function Object:is(T)
+function Class:is(T)
     local mt = getmetatable(self)
     while mt do
         if mt == T then
@@ -43,4 +43,4 @@ function Object:is(T)
 end
 
 
-return Object
+return Class

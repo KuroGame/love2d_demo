@@ -13,7 +13,7 @@ function Scene:ctor(distanceFunc)
     end
 end
 
-function Scene:addClass(name, obj, objType)
+function Scene:addObject(name, obj, objType)
     self.objects[name] = {
         name=name,
         object=obj,
@@ -35,13 +35,13 @@ function Scene:addDistanceMeasure(srcName, tarName, both)
 end
 
 function Scene:update(dt)
-    -- update time
     for k, v in pairs(self.objects) do
+        -- update time
         v:update(dt)
-    end
+        -- update 
+        -- update collision
 
-    -- update collision
-    -- to-do
+    end
 
     -- update distance
     for ke, edges in pairs(self.graph) do
@@ -50,6 +50,12 @@ function Scene:update(dt)
             local tar = v.target
             v.distance = self.distanceFunc(src, tar)
         end
+    end
+end
+
+function Scene:draw()
+    for k, v in pairs(self.objects) do
+        v:draw()
     end
 end
 

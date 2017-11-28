@@ -11,7 +11,6 @@ function Apperance:draw()
     local spriteNum = math.floor(self.animation.currentTime / self.animation.duration * #self.animation.frames) + 1
     -- X, Y, direction, scale
     local img = self.animation.frames[spriteNum]
-    self:calcBBox(img)
     love.graphics.draw(img, self.pos.x, self.pos.y)
 end
 
@@ -37,7 +36,7 @@ function newAnimation(imagePrefix, duration)
  
     local idx = 0
     repeat
-        local path = imagePrefix .. string.format("%03d", idx) .. ".png"
+        local path = imagePrefix .. string.format("_%02d", idx) .. ".png"
         if love.filesystem.exists(path) then
             local img = love.graphics.newImage(path)
             table.insert(animation.frames, img)
